@@ -25,7 +25,9 @@
 
 ODesign is also available at https://odesign.lglab.ac.cn, allowing users to generate binding partners without coding expertise.
 
-Please feel free to contact us via [email](mailto:odesign@lglab.ac.cn) if you have any questions. You can also join our discussion group on [WhatsApp](https://img.shields.io/badge/WhatsApp-Join-25D366?logo=whatsapp) or [WeChat](https://github.com/The-Institute-for-AI-Molecular-Design/ODesign/blob/main/imgs/odesign_wechat_qr_code.jpg).
+Please feel free to contact us via [email](mailto:odesign@lglab.ac.cn) if you have any questions. You can also join our discussion group on [WhatsApp](https://chat.whatsapp.com/BfO6E7EGYpwDdjAAreKDVq?mode=wwt) or [WeChat](https://github.com/The-Institute-for-AI-Molecular-Design/ODesign/blob/main/imgs/odesign_wechat_qr_code.jpg).
+
+This work is supported by Lingang Laboratory, Zhejiang University, The Chinese University of Hong Kong, and Shanghai Artificial Intelligence Laboratory. For the full list of funding sources, please refer to our technical report [ODesign: A World Model for Biomolecular Interaction Design](https://odesign1.github.io/static/pdfs/technical_report.pdf).
 
 <div align="center">
   <img src="imgs/odesign_video.gif" alt="ODesign Video" width="100%">
