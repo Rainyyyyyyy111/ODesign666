@@ -1,18 +1,3 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# pylint: disable=C0114
 from functools import partial
 from typing import Any, Optional
 
@@ -20,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.utils.license_register import register_license
 from src.model.modules.primitives import LinearNoBias, Transition
 from src.model.modules.transformer import AttentionPairBias
 from src.model.modules.feature_dims import MSAFEATS_DIMS
@@ -45,7 +31,7 @@ from src.utils.openfold_local.utils.checkpointing import (
 )
 from src.api.model_interface import PairFormerInput
 
-
+@register_license('bytedance2024')
 class PairformerBlock(nn.Module):
     """
     Implements Algorithm 17 [Line2-Line8] in AlphaFold3.
@@ -245,7 +231,7 @@ class PairformerBlock(nn.Module):
             s = s + self.single_transition(s)
         return s, z
 
-
+@register_license('bytedance2024')
 class PairformerStack(nn.Module):
     """
     Implements Algorithm 17 [PairformerStack] in AlphaFold3.
@@ -414,6 +400,7 @@ class PairformerStack(nn.Module):
         return s, z
 
 
+@register_license('bytedance2024')
 class MSAPairWeightedAveraging(nn.Module):
     """
     Implements Algorithm 10 [MSAPairWeightedAveraging] in AlphaFold3.
@@ -533,7 +520,7 @@ class MSAPairWeightedAveraging(nn.Module):
             torch.cuda.empty_cache()
         return m
 
-
+@register_license('bytedance2024')
 class MSAStack(nn.Module):
     """
     Implements MSAStack Line7-Line8 in Algorithm 8 of AlphaFold3.
@@ -724,7 +711,7 @@ class MSAStack(nn.Module):
             m[start:end, :, :] += self.transition_m(m[start:end, :, :])
         return m
 
-
+@register_license('bytedance2024')
 class MSABlock(nn.Module):
     """
     Base MSA Block implementing Line6-Line13 in Algorithm 8 of AlphaFold3.
@@ -867,6 +854,7 @@ class MSABlock(nn.Module):
             return None, z  # to ensure that `m` will not be used.
 
 
+@register_license('bytedance2024')
 class MSAModule(nn.Module):
     """
     Implements Algorithm 8 [MSAModule] in AlphaFold3.
@@ -1052,6 +1040,7 @@ class MSAModule(nn.Module):
         one_hot_tensor.scatter_(len(shape), tensor.unsqueeze(-1), 1)
         return one_hot_tensor
 
+    @register_license('odesign2025')
     def forward(
         self,
         input_feature: PairFormerInput,
@@ -1064,8 +1053,6 @@ class MSAModule(nn.Module):
         inplace_safe: bool = False,
         chunk_size: Optional[int] = None,
     ) -> torch.Tensor:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Forward pass through the MSAModule.
         
@@ -1189,9 +1176,8 @@ class MSAModule(nn.Module):
         return z
 
 
+@register_license('odesign2025')
 class TemplateEmbedder(nn.Module):
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """
     Implements Algorithm 16 [TemplateEmbedder] in AlphaFold3.
     
@@ -1419,9 +1405,8 @@ class TemplateEmbedder(nn.Module):
         return u_ij
     
 
+@register_license('odesign2025')
 class ConstraintTemplateEmbedder(nn.Module):
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """
     Constraint-based template embedder for incorporating distance constraints into pair features.
     

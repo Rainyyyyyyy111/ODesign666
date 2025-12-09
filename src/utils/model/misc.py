@@ -1,17 +1,3 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from typing import Optional, Union
 
 import numpy as np
@@ -20,9 +6,11 @@ import torch.nn as nn
 import torch.distributed as dist
 from scipy.spatial.transform import Rotation
 
+from src.utils.license_register import register_license
 from src.utils.model.scatter_utils import scatter
 
 
+@register_license('odesign2025')
 def centre_random_augmentation(
     x_input_coords: torch.Tensor,
     N_sample: int = 1,
@@ -32,8 +20,6 @@ def centre_random_augmentation(
     eps: float = 1e-12,
     dtype: torch.dtype = torch.float32,
 ) -> torch.Tensor:
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """Implements Algorithm 19 in AF3
 
     Args:
@@ -105,6 +91,7 @@ def centre_random_augmentation(
 
 
 # Comment: Rotation.random is not supported by torch.compile()
+@register_license('bytedance2024')
 def uniform_random_rotation(N_sample: int = 1) -> torch.Tensor:
     """Generate random rotation matrices with scipy.spatial.transform.Rotation
 
@@ -122,6 +109,7 @@ def uniform_random_rotation(N_sample: int = 1) -> torch.Tensor:
 
 # this is from openfold.utils.rigid_utils import rot_vec_mul
 # precision is added
+@register_license('bytedance2024')
 def rot_vec_mul(r: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
     """Apply rot matrix to vector
     Applies a rotation to a vector. Written out by hand to avoid transfer
@@ -154,6 +142,7 @@ def rot_vec_mul(r: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
 
 # from openfold.utils.tensor_utils.permute_final_dims
 # from openfold.utils.tensor_utils.flatten_final_dims
+@register_license('bytedance2024')
 def permute_final_dims(tensor: torch.Tensor, inds: list[int]) -> torch.Tensor:
     """Permute final dims of tensor
 
@@ -170,6 +159,7 @@ def permute_final_dims(tensor: torch.Tensor, inds: list[int]) -> torch.Tensor:
     return tensor.permute(first_inds + [zero_index + i for i in inds])
 
 
+@register_license('bytedance2024')
 def flatten_final_dims(t: torch.Tensor, num_dims: int) -> torch.Tensor:
     """Flatten final dims of tensor
 
@@ -184,6 +174,7 @@ def flatten_final_dims(t: torch.Tensor, num_dims: int) -> torch.Tensor:
     return t.reshape(shape=t.shape[:-num_dims] + (-1,))
 
 
+@register_license('bytedance2024')
 def one_hot(
     x: torch.Tensor, lower_bins: torch.Tensor, upper_bins: torch.Tensor
 ) -> torch.Tensor:
@@ -204,6 +195,7 @@ def one_hot(
 
 
 # this is mostly from openfold.utils.torch_utils import batched_gather
+@register_license('bytedance2024')
 def batched_gather(
     data: torch.Tensor, inds: torch.Tensor, dim: int = 0, no_batch_dims: int = 0
 ) -> torch.Tensor:
@@ -238,6 +230,7 @@ def batched_gather(
     return data[ranges]
 
 
+@register_license('bytedance2024')
 def broadcast_token_to_atom(
     x_token: torch.Tensor, atom_to_token_idx: torch.Tensor
 ) -> torch.Tensor:
@@ -268,6 +261,7 @@ def broadcast_token_to_atom(
     )
 
 
+@register_license('bytedance2024')
 def aggregate_atom_to_token(
     x_atom: torch.Tensor,
     atom_to_token_idx: torch.Tensor,
@@ -297,6 +291,7 @@ def aggregate_atom_to_token(
     return out
 
 
+@register_license('bytedance2024')
 def sample_indices(
     n: int,
     device: torch.device = torch.device("cpu"),
@@ -321,6 +316,7 @@ def sample_indices(
     return indices
 
 
+@register_license('bytedance2024')
 def sample_msa_feature_dict_random_without_replacement(
     feat_dict: dict[str, torch.Tensor],
     dim_dict: dict[str, int],
@@ -359,6 +355,7 @@ def sample_msa_feature_dict_random_without_replacement(
     return msa_feat_dict
 
 
+@register_license('bytedance2024')
 def expand_at_dim(x: torch.Tensor, dim: int, n: int) -> torch.Tensor:
     """expand a tensor at specific dim by n times
 
@@ -378,6 +375,7 @@ def expand_at_dim(x: torch.Tensor, dim: int, n: int) -> torch.Tensor:
     return x.expand(*before_shape, n, *after_shape)
 
 
+@register_license('bytedance2024')
 def pad_at_dim(
     x: torch.Tensor,
     dim: int,
@@ -408,6 +406,7 @@ def pad_at_dim(
     return nn.functional.pad(x, pad=pad, value=value)
 
 
+@register_license('bytedance2024')
 def reshape_at_dim(
     x: torch.Tensor, dim: int, target_shape: Union[tuple[int], list[int]]
 ) -> torch.Tensor:
@@ -432,6 +431,7 @@ def reshape_at_dim(
     return x.reshape(target_shape)
 
 
+@register_license('bytedance2024')
 def move_final_dim_to_dim(x: torch.Tensor, dim: int) -> torch.Tensor:
     """
     Move the final dimension of a tensor to a specified dimension.
@@ -459,6 +459,7 @@ def move_final_dim_to_dim(x: torch.Tensor, dim: int) -> torch.Tensor:
     return x.permute(new_order)
 
 
+@register_license('bytedance2024')
 def simple_merge_dict_list(dict_list: list[dict]) -> dict:
     """
     Merge a list of dictionaries into a single dictionary.
@@ -494,14 +495,13 @@ def simple_merge_dict_list(dict_list: list[dict]) -> dict:
     return merged_dict
 
 
+@register_license('odesign2025')
 def reverse_centre_random_augmentation(
     x_augment_coords: torch.Tensor, 
     trans: torch.Tensor, 
     rot: torch.Tensor, 
     x_center: torch.Tensor
 ) -> torch.Tensor:
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """
     Reverse the centre random augmentation to recover original coordinates.
     
@@ -539,6 +539,7 @@ def reverse_centre_random_augmentation(
     return x_reversed.view_as(x_augment_coords)
 
 
+@register_license('bytedance2024')
 def reverse_transformation(
     augmented_coords: torch.Tensor, 
     trans: torch.Tensor, 
@@ -571,10 +572,12 @@ def reverse_transformation(
     original_coords = coords_no_rot + center
     return original_coords
 
+@register_license('bytedance2024')
 def count_parameters(model):
     total_params = sum(p.numel() for p in model.parameters())
     return total_params / 1000.0 / 1000.0
 
+@register_license('bytedance2024')
 def is_loss_nan_check(loss: torch.Tensor) -> bool:
     """check the validness of the current loss
 
@@ -603,9 +606,8 @@ def is_loss_nan_check(loss: torch.Tensor) -> bool:
         return True
     return False
 
+@register_license('odesign2025')
 def check_condition_atom_coords(x_denoised, x_gt, condition_mask):
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     if condition_mask.any():
         N_sample = x_denoised.shape[0]
         x_gt = x_gt.unsqueeze(dim=0).expand(N_sample, -1, -1)

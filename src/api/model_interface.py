@@ -20,9 +20,10 @@ from typing import List
 from attr import define
 from ._base import *
 from .data_interface import OFeatureData, OLabelData
-
+from src.utils.license_register import register_license
 
 @define
+@register_license('odesign2025')
 @auto_type_convert
 class GroundTruth(DictAccessMixin):
     """
@@ -105,6 +106,7 @@ class GroundTruth(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class PairFormerInput(DictAccessMixin):
     """
     Input features for PairFormer module (Algorithm 17 in AlphaFold3).
@@ -229,6 +231,7 @@ class PairFormerInput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class PairFormerOutput(DictAccessMixin):
     """
     Output embeddings from PairFormer trunk module.
@@ -272,6 +275,7 @@ class PairFormerOutput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class PairwiseOutput(DictAccessMixin):
     """
     Output from Pairwise prediction heads.
@@ -296,6 +300,7 @@ class PairwiseOutput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class DiffusionInput(DictAccessMixin):
     """
     Input features for Diffusion module (Algorithm 20 in AlphaFold3).
@@ -397,6 +402,7 @@ class DiffusionInput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class DiffusionOutput(DictAccessMixin):
     """
     Output from Diffusion module.
@@ -421,6 +427,7 @@ class DiffusionOutput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class PermutationInput(DictAccessMixin):
     """
     Input features for symmetric permutation operations.
@@ -490,6 +497,7 @@ class PermutationInput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class ODesignOutput(DictAccessMixin):
     """
     Complete output from ODesign model.
@@ -542,6 +550,7 @@ class ODesignOutput(DictAccessMixin):
 
 @define
 @auto_type_convert
+@register_license('odesign2025')
 class LossInput(DictAccessMixin):
     """
     Input features for loss computation.

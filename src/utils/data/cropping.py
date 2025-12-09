@@ -1,16 +1,3 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 import copy
 import random
@@ -22,9 +9,11 @@ import torch
 from biotite.structure import AtomArray
 from scipy.spatial.distance import cdist
 
+from src.utils.license_register import register_license
 from src.utils.data.tokenizer import TokenArray
 
 
+@register_license('odesign2025')
 def identify_mol_type(
     ref_space_uid: torch.Tensor,
     atom_sums: torch.Tensor,
@@ -74,6 +63,7 @@ def identify_mol_type(
     )
 
 
+@register_license('odesign2025')
 def get_interface_token(
     chain_id: torch.Tensor,
     reference_chain_id: torch.Tensor,
@@ -109,6 +99,7 @@ def get_interface_token(
     return interface_token_indices
 
 
+@register_license('odesign2025')
 def get_spatial_crop_index(
     tokens: torch.Tensor,
     chain_id: torch.Tensor,
@@ -205,7 +196,7 @@ def get_spatial_crop_index(
     ), f"Spatial cropping crop {selected_token_indices.shape[0]}, more than {crop_size} tokens!!"
     return selected_token_indices, reference_token_idx
 
-
+@register_license('odesign2025')
 def get_continues_crop_index(
     tokens: torch.Tensor,
     chain_id: torch.Tensor,
@@ -409,12 +400,13 @@ def get_continues_crop_index(
         ), f"Continuous cropping crop {selected_token_indices.shape[0]}, more than {crop_size} tokens!!"
     return selected_token_indices
 
-
+@register_license('odesign2025')
 class CropData(object):
     """
     Crop the data based on the given crop size and reference chain indices (asym_id).
     """
 
+ 
     def __init__(
         self,
         focus_on_ligand: bool,
@@ -428,8 +420,6 @@ class CropData(object):
         drop_last: bool = False,
         remove_metal: bool = False,
     ) -> None:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Args:
             crop_size (int): The size of the crop to be sampled.
@@ -463,6 +453,7 @@ class CropData(object):
             self.method_weights = [1]
             self.spatial_crop_complete_lig = True
 
+    @register_license('bytedance2024')
     def random_crop_method(self) -> str:
         """
         Choose a random cropping method based on the given weights.
@@ -474,6 +465,7 @@ class CropData(object):
             0
         ]
 
+    @register_license('bytedance2024')
     def get_token_dist_mat(self, token_indices_in_ref: np.ndarray) -> np.ndarray:
         """
         Get the distance matrix of the tokens in the reference chain.
@@ -500,6 +492,7 @@ class CropData(object):
         )
         return partial_token_dist_matrix
 
+    @register_license('bytedance2024')
     def extract_info(
         self,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, list[int]]:
@@ -534,6 +527,7 @@ class CropData(object):
         is_ligand = torch.Tensor(is_ligand)
         return tokens, chain_id, token_dist_mask_1d, token_indices_in_ref, is_ligand
 
+    @register_license('bytedance2024')
     def crop_by_indices(
         self,
         selected_token_indices: torch.Tensor,
@@ -552,6 +546,7 @@ class CropData(object):
         )
 
     @staticmethod
+    @register_license('bytedance2024')
     def select_by_token_indices(
         token_array: TokenArray,
         atom_array: AtomArray,
@@ -631,9 +626,8 @@ class CropData(object):
             cropped_template_features,
         )
 
+    @register_license('odesign2025')
     def get_crop_indices(self, crop_method: str = None) -> torch.Tensor:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Get selected indices based on the selected crop method.
 

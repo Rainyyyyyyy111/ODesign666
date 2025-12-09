@@ -1,20 +1,7 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import torch
 import torch.nn as nn
 
+from src.utils.license_register import register_license
 from src.model.modules.primitives import Linear
 from src.utils.data.constants import BOND_TYPE
 from src.api.model_interface import (
@@ -22,7 +9,7 @@ from src.api.model_interface import (
     PairwiseOutput,
 )
 
-# Adapted From openfold.model.heads
+@register_license('bytedance2024')
 class DistogramHead(nn.Module):
     """Implements Algorithm 1 [Line17] in AF3
     Computes a distogram probability distribution.
@@ -59,9 +46,8 @@ class DistogramHead(nn.Module):
         logits = logits + logits.transpose(-2, -3)
         return logits
 
+@register_license('odesign2025')
 class BondTypeHead(nn.Module):
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """Implements a bond type classifier head.
     Computes bond type probability distribution.
     """
@@ -98,7 +84,7 @@ class BondTypeHead(nn.Module):
         logits = self.classifier(z.unsqueeze(0))
         return logits
 
-
+@register_license('odesign2025')
 class PairwiseHead(nn.Module):
     """Implements a pairwise head.
     Computes pairwise probability distribution.

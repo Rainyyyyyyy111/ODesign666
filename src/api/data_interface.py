@@ -14,9 +14,11 @@ from typing import List
 from attr import define
 import attr
 import numpy as np
+from src.utils.license_register import register_license
 
 
 @define(kw_only=True)
+@register_license('odesign2025')
 @auto_type_convert
 class OFeatureData(DictAccessMixin):
     """
@@ -399,6 +401,7 @@ class OFeatureData(DictAccessMixin):
     
 
 @define(kw_only=True)
+@register_license('odesign2025')
 @auto_type_convert
 class OLabelData(DictAccessMixin):
     """

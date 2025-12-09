@@ -1,18 +1,4 @@
 
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 Diffusion generator module for coordinate sampling and training.
 
@@ -54,6 +40,7 @@ from typing import Any, Callable, Optional
 
 import torch
 
+from src.utils.license_register import register_license
 from src.utils.model.misc import (
     centre_random_augmentation,
     reverse_centre_random_augmentation,
@@ -73,6 +60,7 @@ from src.model.modules.schedulers import (
 )
         
 
+@register_license('odesign2025')
 def sample_diffusion(
     denoise_net: torch.nn.Module,
     input_data: DiffusionInput,
@@ -85,8 +73,6 @@ def sample_diffusion(
     inplace_safe: bool = False,
     attn_chunk_size: Optional[int] = None,
 ) -> DiffusionOutput:
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """
     Sample structures from diffusion model using iterative denoising (Algorithm 18 in AF3).
     
@@ -301,6 +287,7 @@ def sample_diffusion(
     return DiffusionOutput(x_l)
 
 
+@register_license('odesign2025')
 def sample_diffusion_training(
     noise_schedulers: dict[str, TrainingNoiseScheduler],
     denoise_net: torch.nn.Module,
@@ -311,8 +298,6 @@ def sample_diffusion_training(
     diffusion_chunk_size: Optional[int] = None,
     use_conditioning: bool = True,
 ) -> DiffusionOutput:
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
     """
     Training-time diffusion sampling with noise addition and denoising.
     

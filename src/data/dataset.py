@@ -63,6 +63,7 @@ from biotite.structure.atoms import AtomArray
 from ml_collections.config_dict import ConfigDict
 from torch.utils.data import Dataset
 
+from src.utils.license_register import register_license
 from src.utils.data.constants import EvaluationChainInterface
 from src.utils.data.data_pipeline import DataPipeline
 from src.utils.data.featurizer import Featurizer
@@ -210,9 +211,8 @@ class BaseSingleDataset(Dataset):
         # Read data
         self.indices_list = self.read_indices_list(indices_fpath)
 
+    @register_license('odesign2025')
     def print_config_table(self):
-    # Copyright 2025 ODesign Team and/or its affiliates.
-    # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Print dataset configuration information in table format.
         
@@ -281,9 +281,8 @@ class BaseSingleDataset(Dataset):
                     pdb_filter_list.append(l)
         return pdb_filter_list
 
+    @register_license('odesign2025')
     def read_indices_list(self, indices_fpath: Union[str, Path]) -> pd.DataFrame:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Read and process indices list from a CSV file.
         
@@ -682,11 +681,10 @@ class BaseSingleDataset(Dataset):
             atom_array.sym_id_int[mask] = _shuffle(atom_array.sym_id_int[mask])
         return atom_array
 
+    @register_license('odesign2025')
     def process_one(
         self, idx: int, return_atom_token_array: bool = False
     ) -> dict[str, dict]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Process a single data sample with full pipeline.
         
@@ -894,6 +892,7 @@ class BaseSingleDataset(Dataset):
             data["token_array"] = cropped_token_array
         return data
 
+    @register_license('odesign2025')
     def crop(
         self,
         focus_on_ligand: bool,
@@ -906,8 +905,6 @@ class BaseSingleDataset(Dataset):
         drop_last: bool = True,
         remove_metal: bool = True,
     ) -> tuple[str, TokenArray, AtomArray, dict[str, Any], dict[str, Any]]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Crop bioassembly data based on specified configurations.
         
@@ -1064,6 +1061,7 @@ class BaseSingleDataset(Dataset):
 
         return eval_type, cluster_id, chain_1_mask, chain_2_mask
 
+    @register_license('odesign2025')
     def get_constraint_feature(
         self,
         idx,
@@ -1073,8 +1071,6 @@ class BaseSingleDataset(Dataset):
         max_entity_mol_id,
         full_atom_array,
     ):
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Generate constraint features for the data sample.
         
@@ -1126,6 +1122,7 @@ class BaseSingleDataset(Dataset):
         features_dict["constraint_log_info"] = log_dict
         return token_array, atom_array, features_dict, msa_features, full_atom_array
 
+    @register_license('odesign2025')
     def get_feature_and_label(
         self,
         idx: int,
@@ -1139,8 +1136,6 @@ class BaseSingleDataset(Dataset):
         masked_asym_ids: list[int] = None,
         mask_method: str = "",
     ) -> tuple[OFeatureData, OLabelData, OLabelData]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Extract features and labels for a given data point.
         
@@ -1658,9 +1653,9 @@ def get_datasets(
                 instances {test_name: test_dataset}
     """
 
+    @staticmethod
+    @register_license('odesign2025')
     def _get_dataset_param(data_config, dataset_name: str, stage: str):
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Extract and organize dataset parameters from configuration.
         

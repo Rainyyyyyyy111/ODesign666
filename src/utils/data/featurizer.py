@@ -1,17 +1,3 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import copy
 import logging
 from collections import defaultdict
@@ -22,6 +8,7 @@ import torch
 from biotite.structure import Atom, AtomArray, get_residue_starts, BondType
 from sklearn.neighbors import KDTree
 
+from src.utils.license_register import register_license
 from src.utils.data.ccd import get_ccd_ref_info
 from src.utils.data.constants import (
     BOND_TYPE,
@@ -126,6 +113,7 @@ class Featurizer(object):
         self.inference_mode = inference_mode
 
     @staticmethod
+    @register_license('bytedance2024')
     def encoder(
         encode_def_dict_or_list: Optional[Union[dict, list[str]]], input_list: list[str]
     ) -> torch.Tensor:
@@ -171,6 +159,7 @@ class Featurizer(object):
         return onehot_tensor
 
     @staticmethod
+    @register_license('bytedance2024')
     def restype_onehot_encoded(restype_list: list[str]) -> torch.Tensor:
         """
         One-hot encodes residue types according to AlphaFold3 SI Table 5.
@@ -196,6 +185,7 @@ class Featurizer(object):
         return Featurizer.encoder(STD_RESIDUES_WITH_GAP, restype_list)
 
     @staticmethod
+    @register_license('bytedance2024')
     def elem_onehot_encoded(elem_list: list[str]) -> torch.Tensor:
         """
         One-hot encodes element symbols according to AlphaFold3 SI Table 5.
@@ -215,6 +205,7 @@ class Featurizer(object):
         return Featurizer.encoder(get_all_elems(), elem_list)
 
     @staticmethod
+    @register_license('bytedance2024')
     def ref_atom_name_chars_encoded(atom_names: list[str]) -> torch.Tensor:
         """
         One-hot encodes atom name characters according to AlphaFold3 SI Table 5.
@@ -251,6 +242,7 @@ class Featurizer(object):
         return onehot_tensor
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_prot_nuc_frame(token: Token, centre_atom: Atom) -> tuple[int, list[int]]:
         """
         Constructs coordinate frame for protein/DNA/RNA tokens using backbone atoms.
@@ -291,6 +283,7 @@ class Featurizer(object):
         return has_frame, frame_atom_index
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_lig_frame(
         token: Token,
         centre_atom: Atom,
@@ -364,14 +357,13 @@ class Featurizer(object):
         return has_frame, frame_atom_index
 
     @staticmethod
+    @register_license('odesign2025')
     def get_token_frame(
         token_array: TokenArray,
         atom_array: AtomArray,
         ref_pos: torch.Tensor,
         ref_mask: torch.Tensor,
     ) -> TokenArray:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Constructs coordinate frames for all tokens in the token array.
         
@@ -447,6 +439,7 @@ class Featurizer(object):
             token.frame_atom_index = frame_atom_index
         return token_array_w_frame
 
+    @register_license('odesign2025')
     def get_token_features(self) -> dict[str, torch.Tensor]:
         """
         Generates token-level features for model input.
@@ -465,8 +458,6 @@ class Featurizer(object):
                 - sym_id: Symmetry IDs [N_token]
                 - restype: One-hot encoded residue types [N_token, 32]
         """
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         token_features = {}
 
         centre_atoms_indices = self.cropped_token_array.get_annotation(
@@ -504,6 +495,7 @@ class Featurizer(object):
 
         return token_features
 
+    @register_license('bytedance2024')
     def get_chain_perm_features(self) -> dict[str, torch.Tensor]:
         """
         Generates chain permutation features for symmetry-aware alignment.
@@ -530,6 +522,7 @@ class Featurizer(object):
         ).long()
         return chain_perm_features
 
+    @register_license('odesign2025')
     def get_renamed_atom_names(self) -> np.ndarray:
         """
         Renames ligand atom names to prevent information leakage during training.
@@ -543,8 +536,6 @@ class Featurizer(object):
             np.ndarray: Array of renamed atom names.
                 Shape: [N_atom]
         """
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         res_starts = get_residue_starts(
             self.cropped_atom_array, add_exclusive_stop=True
         )
@@ -562,6 +553,7 @@ class Featurizer(object):
             new_atom_names[start:stop] = new_res_atom_names
         return new_atom_names
 
+    @register_license('odesign2025')
     def get_reference_features(self) -> dict[str, torch.Tensor]:
         """
         Generates reference conformer features for model input.
@@ -589,8 +581,6 @@ class Featurizer(object):
                 - has_frame: Frame validity flags [N_token]
                 - frame_atom_index: Frame atom indices [N_token, 3]
         """
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         ref_pos = []
         rep_res_info = {
             PROTEIN_REP_RESIDUE: get_ccd_ref_info(PROTEIN_REP_RESIDUE),
@@ -705,6 +695,7 @@ class Featurizer(object):
         ).long()  # [N_token, 3]
         return ref_features
 
+    @register_license('odesign2025')
     def get_bond_features(self) -> dict[str, torch.Tensor]:
         """
         Generates bond connectivity features at the token level.
@@ -726,8 +717,6 @@ class Featurizer(object):
                 - token_pair_gen_mask: Mask for token pairs to generate [N_token, N_token]
                 - token_bond_gen_mask: Mask for bonds to generate [N_token, N_token]
         """
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         bond_array = self.cropped_atom_array.bonds.as_array()
         bond_atom_i = bond_array[:, 0]
         bond_atom_j = bond_array[:, 1]
@@ -835,6 +824,7 @@ class Featurizer(object):
 
         return bond_features
 
+    @register_license('odesign2025')
     def get_identity_features(self) -> dict[str, torch.Tensor]:
         """
         Generates atom identity and type features for model input.
@@ -851,8 +841,6 @@ class Featurizer(object):
                 - is_dna: Binary flag for DNA atoms [N_atom]
                 - is_rna: Binary flag for RNA atoms [N_atom]
         """
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         atom_to_token_idx_dict = {}
         for idx, token in enumerate(self.cropped_token_array.tokens):
             for atom_idx in token.atom_indices:
@@ -881,6 +869,7 @@ class Featurizer(object):
 
         return identity_features
     
+    @register_license('bytedance2024')
     def get_resolution_features(self) -> dict[str, torch.Tensor]:
         """
         Extracts structure resolution information if available.
@@ -905,6 +894,7 @@ class Featurizer(object):
         return {"resolution": resolution}
 
     @staticmethod
+    @register_license('odesign2025')
     def get_lig_pocket_mask(
         atom_array: AtomArray, 
         lig_label_asym_id: Union[str, list]
@@ -1001,9 +991,8 @@ class Featurizer(object):
         ).long()
         return ligand_mask_by_pockets, pocket_mask_by_pockets
 
+    @register_license('odesign2025')
     def get_mask_features(self) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Generates various masking features for training and evaluation.
         
@@ -1091,9 +1080,8 @@ class Featurizer(object):
 
         return mask_features
 
+    @register_license('odesign2025')
     def get_all_input_features(self) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Aggregates all input features required for model inference or training.
         
@@ -1154,9 +1142,8 @@ class Featurizer(object):
         
         return features
 
+    @register_license('odesign2025')
     def get_labels(self) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Generates ground truth labels for model training.
         
@@ -1246,6 +1233,7 @@ class Featurizer(object):
 
         return labels
 
+    @register_license('bytedance2024')
     def get_atom_perm_features(self) -> dict[str, list[list[int]]]:
         """
         Generates atom permutation information for symmetry handling.
@@ -1325,13 +1313,12 @@ class Featurizer(object):
         return {"atom_perm_list": fixed_atom_perm_list}
 
     @staticmethod
+    @register_license('odesign2025')
     def get_gt_full_complex_features(
         atom_array: AtomArray,
         cropped_atom_array: AtomArray = None,
         get_cropped_asym_only: bool = True,
     ) -> tuple[dict[str, torch.Tensor], AtomArray]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Extracts full ground truth complex features for multi-chain permutation alignment.
         
@@ -1395,14 +1382,13 @@ class Featurizer(object):
         ).long()
         return gt_features, atom_array
 
+    @register_license('odesign2025')
     def get_hotspot_features(
         self, 
         feat_shape: Optional[dict] = None, 
         interface_minimal_distance: float = 15.0, 
         min_distance: bool = True
     ) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Identifies hotspot residues at protein-ligand or protein-protein interfaces.
         
@@ -1519,6 +1505,7 @@ class Featurizer(object):
         
         return {"is_hotspot_residue": is_hotspot_residue}
 
+    @register_license('odesign2025')
     def set_default_msa_features(
         self, features_dict: dict, feat_shape: dict
     ) -> dict[str, torch.Tensor]:
@@ -1572,6 +1559,7 @@ class Featurizer(object):
 
         return msa_features
     
+    @register_license('odesign2025')
     def set_default_template_features(self, feat_shape: dict) -> dict[str, torch.Tensor]:
         """
         Creates default template features when no template data is available.
@@ -1603,11 +1591,10 @@ class Featurizer(object):
         )
         return template_features
 
+    @register_license('odesign2025')
     def get_msa_features(
         self, features_dict: dict, feat_shape: dict
     ) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Retrieves or generates MSA features with appropriate masking.
         
@@ -1649,6 +1636,7 @@ class Featurizer(object):
             msa_features['msa_token_mask'] = msa_token_mask
         return msa_features
 
+    @register_license('bytedance2024')
     def get_template_features(self, feat_shape: dict) -> dict[str, torch.Tensor]:
         """
         Retrieves or generates template features.
@@ -1671,9 +1659,8 @@ class Featurizer(object):
             template_features = dict_to_tensor(self.template_features)
         return template_features
     
+    @register_license('odesign2025')
     def get_cyclic_features(self) -> dict[str, torch.Tensor]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Identifies tokens that are part of cyclic structures.
         

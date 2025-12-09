@@ -1,20 +1,7 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import numpy as np
 import torch
 
+from src.utils.license_register import register_license
 from src.utils.train.distributed import gather_and_merge
 
 common_aggregator = {
@@ -40,6 +27,7 @@ class SimpleMetricAggregator(object):
 
         self.aggregators = {name: common_aggregator[name] for name in aggregator_names}
 
+    @register_license('bytedance2024')
     def add(self, key, value, namespace="default"):
         value_dict = self._metric_data.setdefault(namespace, {})
         value_dict.setdefault(key, [])
@@ -56,9 +44,8 @@ class SimpleMetricAggregator(object):
             raise ValueError(f"Unsupported type for metric data: {type(value)}")
         value_dict[key].append(value)
 
+    @register_license('odesign2025')
     def calc(self):
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         metric_data, self._metric_data = self._metric_data, {}
         if self.need_gather and self.gather_before_calc:
             metric_data = gather_and_merge(

@@ -61,6 +61,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from src.utils.license_register import register_license
 from src.api.data_interface import OFeatureData, OLabelData
 from src.api.model_interface import (
     PairFormerInput,
@@ -101,7 +102,7 @@ from .modules.pairformer import ConstraintTemplateEmbedder
 
 logger = logging.getLogger(__name__)
 
-
+@register_license('odesign2025')
 class ODesign(nn.Module):
     """
     ODesign main model implementing AlphaFold3-inspired architecture.
@@ -246,8 +247,6 @@ class ODesign(nn.Module):
         inplace_safe: bool = False,
         chunk_size: int | None = None,
     ) -> PairFormerOutput:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Forward pass from input features to pairformer output representations.
         
@@ -723,6 +722,7 @@ class ODesign(nn.Module):
 
         return model_output, ground_truth, log_dict
 
+    @register_license('odesign2025')
     def forward(
         self,
         feature_data: OFeatureData,
@@ -732,8 +732,6 @@ class ODesign(nn.Module):
         current_step: Optional[int] = None,
         symmetric_permutation: SymmetricPermutation = None,
     ) -> tuple[dict[str, torch.Tensor], dict[str, Any], dict[str, Any]]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Forward pass of the ODesign model supporting multiple operation modes.
         

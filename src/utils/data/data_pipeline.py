@@ -1,16 +1,3 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 """
 Data processing pipeline for protein structure data.
@@ -38,6 +25,7 @@ import pandas as pd
 import torch
 from biotite.structure import AtomArray
 
+from src.utils.license_register import register_license
 from src.utils.data.msa_featurizer import MSAFeaturizer
 from src.utils.data.parser import DistillationMMCIFParser, MMCIFParser
 from src.utils.data.tokenizer import AtomArrayTokenizer, TokenArray
@@ -64,6 +52,7 @@ class DataPipeline(object):
     """
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_data_from_mmcif(
         mmcif: Union[str, Path],
         pdb_cluster_file: Union[str, Path, None] = None,
@@ -122,6 +111,7 @@ class DataPipeline(object):
             return [], {}
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_label_entity_id_to_asym_id_int(atom_array: AtomArray) -> dict[str, int]:
         """
         Get a dictionary that associates each label_entity_id with its corresponding asym_id_int.
@@ -139,6 +129,7 @@ class DataPipeline(object):
         return entity_to_asym_id
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_data_bioassembly(
         bioassembly_dict_fpath: Union[str, Path],
     ) -> dict[str, Any]:
@@ -162,6 +153,7 @@ class DataPipeline(object):
         return bioassembly_dict
 
     @staticmethod
+    @register_license('bytedance2024')
     def _map_ref_chain(
         one_sample: pd.Series, bioassembly_dict: dict[str, Any]
     ) -> list[int]:
@@ -189,6 +181,7 @@ class DataPipeline(object):
         return ref_chain_indices
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_msa_raw_features(
         bioassembly_dict: dict[str, Any],
         selected_indices: np.ndarray,
@@ -223,6 +216,7 @@ class DataPipeline(object):
         return msa_feats
 
     @staticmethod
+    @register_license('bytedance2024')
     def get_template_raw_features(
         bioassembly_dict: dict[str, Any],
         selected_indices: np.ndarray,
@@ -257,6 +251,7 @@ class DataPipeline(object):
         return template_feats
 
     @staticmethod
+    @register_license('odesign2025')
     def crop(
         focus_on_ligand: bool,
         one_sample: pd.Series,
@@ -270,8 +265,6 @@ class DataPipeline(object):
         drop_last: bool = False,
         remove_metal: bool = False,
     ) -> tuple[str, TokenArray, AtomArray, dict[str, Any], dict[str, Any]]:
-        # Copyright 2025 ODesign Team and/or its affiliates.
-        # Licensed under the Apache License, Version 2.0 (the "License");
         """
         Crop data based on the crop size and reference chain indices.
 
@@ -404,6 +397,7 @@ class DataPipeline(object):
         )
     
     @staticmethod
+    @register_license('odesign2025')
     def _check_lig_unchanged(
         bioassembly_dict: dict[str, Any],
         cropped_atom_array: AtomArray,
@@ -428,6 +422,7 @@ class DataPipeline(object):
             )
 
     @staticmethod
+    @register_license('bytedance2024')
     def save_atoms_to_cif(
         output_cif_file: str, atom_array: AtomArray, include_bonds: bool = False
     ) -> None:
