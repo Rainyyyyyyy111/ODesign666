@@ -60,6 +60,21 @@ docker run --gpus all -it --rm --shm-size=8g \
   odesign bash
 ```
 
+Or use Apptainer:
+
+```bash
+apptainer build odesign.sif odesign.def
+
+apptainer run --nv \
+  --writable-tmpfs \
+  -B ckpt:/app/ODesign/ckpt \
+  -B data:/app/ODesign/data \
+  -B outputs:/app/ODesign/outputs \
+  -B $(pwd)/inference_demo.sh:/app/ODesign/inference_demo.sh \
+  -B $(pwd)/train_demo.sh:/app/ODesign/train_demo.sh \
+  odesign.sif bash
+```
+
 # Available Models
 ODesign currently provides the following pre-trained model variants. Each model supports a specific modality and design mode:
 
