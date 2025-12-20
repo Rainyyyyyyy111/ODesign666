@@ -181,6 +181,98 @@ outputs
 
 > Please note that the number of designed sequences per backbone structure (default: 1) can be specified by the argument `exp.invfold_topk`.
 
+## Tasks
+
+### Protein Generation
+
+#### Protein-binding Protein
+
+<img src="imgs/protein/protein_binding_protein.png" alt="Protein-binding Protein" width="400px" align="right"/>
+
+ODesign can generate proteins that bind to specific protein targets. You need to provide a reference structure containing the target protein and specify the hotspot residues that define the binding interface. The model will generate a new protein chain that interacts with the target at the specified hotspot.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_flex` and `input_json_path=./examples/protein_design/prot_binding_prot/odesign_input.json`.
+
+#### Ligand-binding Protein
+
+<img src="imgs/protein/ligand_binding_protein.png" alt="Ligand-binding Protein" width="400px" align="right"/>
+
+ODesign can generate proteins that bind to specific small molecule ligands. You need to provide a reference structure containing the ligand and specify the hotspot atoms on the ligand. The model will generate a new protein chain that forms interactions with the ligand at the specified hotspot.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_flex` and `input_json_path=./examples/protein_design/lig_binding_prot/odesign_input.json`.
+
+#### Atom Scaffold
+
+<img src="imgs/protein/tip_atom.png" alt="Atom Scaffold" width="150" align="right"/>
+
+ODesign can scaffold proteins around specific atoms or functional groups. This is useful for designing proteins that interact with specific chemical moieties. You need to specify the condition atoms that define the scaffold constraints, and the model will generate a protein structure that positions these atoms correctly.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_flex` and `input_json_path=./examples/protein_design/atom_scaffold/odesign_input.json`.
+
+### Motif Scaffold
+<p align="center">
+<img src="imgs/protein/motif_scaffolding.png" alt="Motif Scaffold" width="400px" align="middle"/>
+</p>
+ODesign can scaffold functional protein motifs by generating surrounding protein structure. This is useful for stabilizing functional motifs or creating new protein folds around known functional elements. You need to specify the motif regions from the reference structure and the desired scaffold length.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_flex` and `input_json_path=./examples/protein_design/motif_scaffold/odesign_input.json`.
+
+### Ligand Generation
+
+#### Protein-binding Ligand
+
+<img src="imgs/ligand/protein_binding_ligand.png" alt="Protein-binding Ligand" width="150" align="right"/>
+
+ODesign can generate small molecule ligands that bind to specific protein targets. You need to provide a reference structure containing the target protein and specify the hotspot residues that define the binding pocket. The model will generate a new ligand molecule that interacts with the target at the specified hotspot.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_ligand_rigid` and `input_json_path=./examples/ligand_design/prot_binding_lig/odesign_input.json`.
+
+### Nucleic Acid Generation
+
+#### RNA Backbone
+<p align="center">
+<img src="imgs/na/rna_backbone.png" alt="RNA Backbone" width="300px" align="middle"/>
+</p>
+ODesign can generate RNA backbone structures of specified length. This is useful for designing RNA molecules from scratch without requiring a reference structure. You only need to specify the desired RNA chain length.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_na_rigid`, `design_modality=rna`, and `input_json_path=./examples/na_design/rna_bb/odesign_input.json`.
+
+#### Protein-binding RNA
+<p align="center">
+<img src="imgs/na/protein_binding_rna.png" alt="Protein-binding RNA" width="400px" align="middle"/>
+</p>
+ODesign can generate RNA molecules that bind to specific protein targets. You need to provide a reference structure containing the target protein and specify the hotspot residues that define the binding interface. The model will generate a new RNA chain that interacts with the target at the specified hotspot.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_na_rigid`, `design_modality=rna`, and `input_json_path=./examples/na_design/prot_binding_rna/odesign_input.json`.
+
 
 # Training
 **Step 1 — Download Required Training Data**
