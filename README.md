@@ -3,7 +3,6 @@
 </div>
 
 <div align="center">
-
 [![Web Server](https://img.shields.io/badge/Web_Server-Access-9A8CF0?logo=internet-explorer)](https://odesign.lglab.ac.cn/)
 [![Technical Report](https://img.shields.io/badge/Technical_Report-Download-9A8CF0?logo=adobe-acrobat-reader)](https://odesign1.github.io/static/pdfs/technical_report.pdf)
 [![Project Page](https://img.shields.io/badge/Project_Page-Access-9A8CF0?logo=adobe-acrobat-reader)](https://odesign1.github.io/)
@@ -221,7 +220,7 @@ If you use ODesign in your work, please cite the following:
 # Acknowledgements
 This project code draws in part upon [Protenix](https://github.com/bytedance/Protenix) and [OpenFold](https://github.com/aqlaboratory/openfold), and is supported under the Apache 2.0 License. Thanks for their great work and code.
 
-This project is supported by Lingang Laboratory, Zhejiang University, and The Chinese University of Hong Kong. We are actively seeking highly motivated and talented PhD students to join our team. We offer PhD training opportunities in Pharmacy / AI at Zhejiang University, or Computer Science at The Chinese University of Hong Kong. 
+This project is supported by Lingang Laboratory, Zhejiang University, and The Chinese University of Hong Kong. We are actively seeking highly motivated and talented PhD students to join our team. **We offer PhD training opportunities in Pharmacy / AI at Zhejiang University, or Computer Science at The Chinese University of Hong Kong.** 
 
 If you are interested, please contact **odinz@link.cuhk.edu.hk**
 
