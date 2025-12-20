@@ -219,10 +219,13 @@ If you use ODesign in your work, please cite the following:
 
 
 # Acknowledgements
-This project draws in part from [Protenix](https://github.com/bytedance/Protenix) and [OpenFold](https://github.com/aqlaboratory/openfold), supported by the Apache 2.0 License. Thanks for their great work and code.
+This project code draws in part upon [Protenix](https://github.com/bytedance/Protenix) and [OpenFold](https://github.com/aqlaboratory/openfold), and is supported under the Apache 2.0 License. Thanks for their great work and code.
+
+This project is supported by Lingang Laboratory, Zhejiang University, and The Chinese University of Hong Kong. We are actively seeking highly motivated and talented PhD students to join our team. We offer PhD training opportunities in Pharmacy / AI at Zhejiang University, or Computer Science at The Chinese University of Hong Kong. 
+
+If you are interested, please contact **odinz@link.cuhk.edu.hk**
 
 
 # License
 Both source code and model parameters of ODesign are released under the [Apache 2.0 License](https://github.com/The-Institute-for-AI-Molecular-Design/ODesign/blob/main/LICENSE). 
-
 
