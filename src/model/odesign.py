@@ -720,7 +720,7 @@ class ODesign(nn.Module):
         log_dict.update(perm_log_dict)
         # End of Permutation Module
 
-        return model_output, ground_truth, log_dict
+        return model_output.to_dict(), ground_truth, log_dict
 
     @register_license('odesign2025')
     def forward(

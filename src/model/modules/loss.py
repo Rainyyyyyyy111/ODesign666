@@ -1120,9 +1120,9 @@ class ODesignLoss(nn.Module):
         """
         if not self.configs.model.loss_metrics_sparse_enable:
             distance = torch.cdist(
-                pred_output.coordinate, pred_output.coordinate
+                pred_output["coordinate"], pred_output["coordinate"]
             ).to(
-                pred_output.coordinate.dtype
+                pred_output["coordinate"].dtype
             )  # [..., N_atom, N_atom]
             pred_output.update({"distance": distance})  
         return pred_output
@@ -1216,8 +1216,8 @@ class ODesignLoss(nn.Module):
         if mode == "train":
             # Scale diffusion loss with noise-level
             diffusion_per_sample_scale = (
-                pred_output.noise_level ** 2 + self.configs.model.sigma_data**2
-            ) / (self.configs.model.sigma_data * pred_output.noise_level) ** 2
+                pred_output["noise_level"] ** 2 + self.configs.model.sigma_data**2
+            ) / (self.configs.model.sigma_data * pred_output["noise_level"]) ** 2
 
         else:
             # No scale is required
@@ -1229,7 +1229,7 @@ class ODesignLoss(nn.Module):
             loss_fns.update(
                 {
                     "smooth_lddt_loss": lambda: self.smooth_lddt_loss.dense_forward(
-                        pred_coordinate=pred_output.coordinate,
+                        pred_coordinate=pred_output["coordinate"],
                         true_coordinate=ground_truth.coordinate,
                         lddt_mask=ground_truth.lddt_mask,
                         diffusion_chunk_size=self.configs.loss.diffusion_lddt_chunk_size,
@@ -1240,7 +1240,7 @@ class ODesignLoss(nn.Module):
             loss_fns.update(
                 {
                     "smooth_lddt_loss": lambda: self.smooth_lddt_loss.sparse_forward(
-                        pred_coordinate=pred_output.coordinate,
+                        pred_coordinate=pred_output["coordinate"],
                         true_coordinate=ground_truth.coordinate,
                         lddt_mask=ground_truth.lddt_mask,
                         diffusion_chunk_size=self.configs.loss.diffusion_lddt_chunk_size,
@@ -1251,7 +1251,7 @@ class ODesignLoss(nn.Module):
             loss_fns.update(
                 {
                     "smooth_lddt_loss": lambda: self.smooth_lddt_loss(
-                        pred_distance=pred_output.distance,
+                        pred_distance=pred_output["distance"],
                         true_distance=ground_truth.distance,
                         distance_mask=ground_truth.distance_mask,
                         lddt_mask=ground_truth.lddt_mask,
@@ -1274,7 +1274,7 @@ class ODesignLoss(nn.Module):
             {
                 "bond_loss": lambda: (
                     self.bond_loss.sparse_forward(
-                        pred_coordinate=pred_output.coordinate,
+                        pred_coordinate=pred_output["coordinate"],
                         true_coordinate=ground_truth.coordinate,
                         distance_mask=ground_truth.distance_mask,
                         bond_mask=ground_truth.ligand_bond_mask,
@@ -1282,7 +1282,7 @@ class ODesignLoss(nn.Module):
                     )
                     if self.configs.loss.diffusion_sparse_loss_enable
                     else self.bond_loss(
-                        pred_distance=pred_output.distance,
+                        pred_distance=pred_output["distance"],
                         true_distance=ground_truth.distance,
                         distance_mask=ground_truth.distance_mask,
                         bond_mask=ground_truth.ligand_bond_mask,
@@ -1291,7 +1291,7 @@ class ODesignLoss(nn.Module):
                     )
                 ),
                 "mse_loss": lambda: self.mse_loss(
-                    pred_coordinate=pred_output.coordinate,
+                    pred_coordinate=pred_output["coordinate"],
                     true_coordinate=ground_truth.coordinate,
                     coordinate_mask=ground_truth.coordinate_mask,
                     is_rna=loss_input.is_rna,
@@ -1304,11 +1304,11 @@ class ODesignLoss(nn.Module):
             }
         )
         # Distogram Loss
-        if "distogram" in pred_output and pred_output.distogram is not None:
+        if "distogram" in pred_output and pred_output["distogram"] is not None:
             loss_fns.update(
                 {
                     "distogram_loss": lambda: self.distogram_loss(
-                        logits=pred_output.distogram,
+                        logits=pred_output["distogram"],
                         true_coordinate=ground_truth.coordinate,
                         coordinate_mask=ground_truth.coordinate_mask,
                         rep_atom_mask=loss_input.distogram_rep_atom_mask,
@@ -1340,9 +1340,9 @@ class ODesignLoss(nn.Module):
         if self.configs.bond_reconstruction:
             loss_fns.update({
                 "bond_type_loss": lambda: self.bond_type_loss(
-                    pred_output.token_bond_type_logits,
+                    pred_output["token_bond_type_logits"],
                     ground_truth.token_bond_type_label,
-                    pred_output.token_bond_gen_mask,
+                    pred_output["token_bond_gen_mask"],
                 )
             })
         
