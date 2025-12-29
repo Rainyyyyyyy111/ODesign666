@@ -47,6 +47,7 @@ Noise Schedule:
 import logging
 from abc import ABC, abstractmethod
 from typing import Union, Tuple
+import numpy as np
 import torch
 from src.utils.model.torch_utils import append_dims
 
@@ -207,6 +208,7 @@ class InferenceNoiseEDMScheduler(InferenceNoiseScheduler):
         gamma_min: float = 1.0,
         noise_scale_lambda: float = 1.003,
         step_scale_eta: float = 1.5,
+        partial_diffusion: dict = {"enable": False, "snr": 0.1},
     ) -> None:
         """
         Initialize the EDM inference noise scheduler.
@@ -231,6 +233,7 @@ class InferenceNoiseEDMScheduler(InferenceNoiseScheduler):
                 the amount of correction. Typical: 1.003.
             step_scale_eta: Step size scaling factor. Controls denoising step size.
                 Typical: 1.5.
+            partial_diffusion: Configuration for partial diffusion mode.
 
         Returns:
             None
@@ -244,6 +247,33 @@ class InferenceNoiseEDMScheduler(InferenceNoiseScheduler):
         self.gamma_min = gamma_min
         self.noise_scale_lambda = noise_scale_lambda
         self.step_scale_eta = step_scale_eta
+        self.partial_diffusion = partial_diffusion
+
+        if self.partial_diffusion["enable"]:
+            logger.info(f"Using partial diffusion with SNR={self.partial_diffusion['snr']}")
+            self.s_max = self.snr_to_s_max(self.partial_diffusion["snr"])
+
+    def snr_to_s_max(
+        self,
+        snr: float,
+        eps: float = 1e-6,
+    ) -> float:
+        """
+        Convert desired SNR to maximum noise level s_max.
+
+        Given a target signal-to-noise ratio (SNR), compute the corresponding
+        maximum noise level s_max using the formula:
+            SNR = sigma_data^2 / s_max^2
+
+        Args:
+            snr: Desired signal-to-noise ratio.
+            eps: Small epsilon to prevent division by zero. Defaults to 1e-6.
+        Returns:
+            float: Corresponding maximum noise level s_max.
+        """
+        return np.sqrt(
+            self.sigma_data**2 / (snr + eps)
+        ) / self.sigma_data
 
     def set_noise_schedule(
         self,
@@ -386,6 +416,10 @@ class InferenceNoiseEDMScheduler(InferenceNoiseScheduler):
             - Non-conditioned atoms start as pure noise and are iteratively denoised
             - Must call set_noise_schedule before using this method
         """
+        # If partial diffusion is enabled, return ground truth directly
+        if self.partial_diffusion["enable"]:
+            return x_gt.clone()
+
         # Sample Gaussian noise scaled by initial noise level
         x_l = (
             self.noise_schedule[0] *  # s_max (initial noise level)
@@ -448,7 +482,7 @@ class InferenceNoiseEDMScheduler(InferenceNoiseScheduler):
             - The added noise amount depends on gamma parameter
             - Scaling is crucial for network stability
         """
-        if self.use_predictor_corrector_sampler:
+        if self.use_predictor_corrector_sampler or self.partial_diffusion["enable"]:
             # Calculate the amount of corrector noise to add
             # Based on the difference between t_hat and c_tau_last
             delta_noise_level = torch.sqrt(self.t_hat**2 - self.c_tau_last**2)

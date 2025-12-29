@@ -280,6 +280,15 @@ class SampleDictToFeatures:
                     (ref_atom_array.chain_id == c_id) &
                     (ref_atom_array.res_id == int(r_id))
                 ] = True
+        if partial_diff_segments := self.single_sample_dict.get('partial_diff', ''):
+            for partial_diff_segment in partial_diff_segments.split(','):
+                partial_c_id, partial_r_range = partial_diff_segment.split('/')
+                s, e = partial_r_range.split('-')
+                s, e = int(s), int(e)
+                ref_atom_array.condition_token_mask[
+                    (ref_atom_array.chain_id == partial_c_id) &
+                    np.isin(ref_atom_array.res_id, range(s, e+1))
+                ] = False
 
         atom_array = None
         sequence4msa = []

@@ -42,6 +42,9 @@ inference_noise_schedulers:
     gamma_min: 1.0
     noise_scale_lambda: 1.003
     step_scale_eta: 1.5
+    partial_diffusion:
+      enable: false
+      snr: 0.1
 
 sample_diffusion:
   N_sample: 5

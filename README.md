@@ -17,6 +17,11 @@
   - [Input Format](#input-format)
   - [Run Inference](#run-inference)
   - [Output Format](#output-format)
+  - [Usage](#usage)
+    - [Protein Generation](#protein-generation)
+    - [Ligand Generation](#ligand-generation)
+    - [Nucleic Acid Generation](#nucleic-acid-generation)
+    - [Partial Diffusion](#partial-diffusion)
 - [Training](#training)
 - [Cite](#cite)
 - [Acknowledgements](#acknowledgements)
@@ -181,7 +186,7 @@ outputs
 
 > Please note that the number of designed sequences per backbone structure (default: 1) can be specified by the argument `exp.invfold_topk`.
 
-## Tasks
+## Usage
 
 ### Protein Generation
 
@@ -272,6 +277,15 @@ To run this example, use:
 bash inference_demo.sh
 ```
 with `infer_model_name=odesign_base_na_rigid`, `design_modality=rna`, and `input_json_path=./examples/na_design/prot_binding_rna/odesign_input.json`.
+
+### Partial Diffusion
+ODesign can partially modify existing binding molecules to potentially enhance stability, modulate specificity, or improve expressibility. You need to provide a reference structure containing the target molecule, and specify the `partial_diff` field in the input JSON file to indicate the regions that require modifications. Please refer to **Section B.3 Partial Diffusion** in our [Supplementary Information](https://odesign1.github.io/static/pdfs/technical_report.pdf) for details.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_rigid`, `input_json_path=./examples/protein_design/prot_binding_prot_partial_diff/odesign_input.json` and `enable_partial_diff=true`.
 
 
 # Training

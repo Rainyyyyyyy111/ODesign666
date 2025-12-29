@@ -50,6 +50,18 @@ num_workers=4
 # 11. CUDA Device Setup (default: 0)
 export CUDA_VISIBLE_DEVICES=0
 
+#######################################################################
+# Advanced Configuration
+#######################################################################
+
+# ** Partial Diffusion Mode **
+# Set to true to enable partial diffusion during inference.
+# The default signal-to-noise ratio (SNR) is set to 0.1.
+# Please specify the "partial_diff" field in your input JSON file
+# to indicate which segments should be modified during the diffusion process.
+enable_partial_diff=false
+snr=0.1
+
 
 # auto-assign design_modality
 if [[ "$infer_model_name" == *"prot"* ]]; then
@@ -109,7 +121,9 @@ python ./scripts/inference.py \
     exp.seeds="$seeds" \
     exp.model.sample_diffusion.N_sample="$N_sample" \
     exp.use_msa="$use_msa" \
-    exp.num_workers="$num_workers"
+    exp.num_workers="$num_workers" \
+    exp.model.inference_noise_schedulers.coordinate.partial_diffusion.enable=$enable_partial_diff \
+    exp.model.inference_noise_schedulers.coordinate.partial_diffusion.snr=$snr
 
 
 #######################################################################
@@ -145,7 +159,9 @@ python ./scripts/inference.py \
 #         exp.seeds="$seeds" \
 #         exp.model.sample_diffusion.N_sample="$N_sample" \
 #         exp.use_msa="$use_msa" \
-#         exp.num_workers="$num_workers"
+#         exp.num_workers="$num_workers" \
+#         exp.model.inference_noise_schedulers.coordinate.partial_diffusion.enable=$enable_partial_diff \
+#         exp.model.inference_noise_schedulers.coordinate.partial_diffusion.snr=$snr
 
 
 
