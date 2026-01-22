@@ -1,0 +1,19 @@
+[
+  {
+    "name": "pdl1_cycpep_binder",
+    "ref_file": "./examples/cyclic_peptide_design/PDL1_truncated.pdb",
+    "chains": [
+      {
+        "chain_type": "proteinChain",
+        "sequence": "8-25",
+        "if_cyc": "true"
+      },
+      {
+        "chain_type": "proteinChain",
+        "sequence": "B/20-133"
+      }
+    ],
+    "hotspot": "B/64,B/68,B/126,B/128",
+    "center_method": "hotspot_center"
+  }
+]

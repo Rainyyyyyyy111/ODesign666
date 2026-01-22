@@ -278,6 +278,17 @@ bash inference_demo.sh
 ```
 with `infer_model_name=odesign_base_na_rigid`, `design_modality=rna`, and `input_json_path=./examples/na_design/prot_binding_rna/odesign_input.json`.
 
+### Cyclic Peptide Generation
+#### Protein-binding Cyclic Peptide
+ODesign can generate cyclic peptides that bind to specific protein targets. You need to provide a reference structure containing the target protein and specify the hotspot residues that define the binding interface. The model will generate a new cyclic peptide chain that interacts with the target at the specified hotspot.
+
+To run this example, use:
+```bash
+bash inference_demo.sh
+```
+with `infer_model_name=odesign_base_prot_flex` and `input_json_path=./examples/cyclic_peptide_design/odesign_input.json`.
+
+
 ### Partial Diffusion
 ODesign can partially modify existing binding molecules to potentially enhance stability, modulate specificity, or improve expressibility. You need to provide a reference structure containing the target molecule, and specify the `partial_diff` field in the input JSON file to indicate the regions that require modifications. Please refer to **Section B.3 Partial Diffusion** in our [Supplementary Information](https://odesign1.github.io/static/pdfs/technical_report.pdf) for details.
 
