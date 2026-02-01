@@ -1,0 +1,16 @@
+[
+  {
+    "name": "lig_binding_prot_smiles_demo",
+    "chains": [
+      {
+        "chain_type": "proteinChain",
+        "sequence": "140-160"
+      },
+      {
+        "chain_type": "ligand",
+        "smiles": "CC=1N=C5CCCCN5C(C=1CCN2CCC(CC2)c4c3c(cc(cc3)F)on4)=O"
+      }
+    ],
+    "center_method": "hotspot_center"
+  }
+]

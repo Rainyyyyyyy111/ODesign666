@@ -3,9 +3,12 @@ from copy import deepcopy
 import numpy as np
 import logging
 from collections import defaultdict
-from biotite.structure import AtomArray
+from biotite.structure import AtomArray, create_atom_names
 from biotite.structure.io import pdb, pdbx
 import biotite.structure as struc
+from biotite.interface.rdkit import from_mol
+from rdkit import Chem
+from rdkit.Chem import AllChem
 
 import src.utils.data.ccd as ccd
 from src.utils.data.filter import Filter
@@ -128,7 +131,12 @@ def sample_length(segments: str, length: int) -> list:
 
     return reshaped_segments
 
-def build_chain_atom_array(chain_sequence: str, chain_type: str, ref_atom_array: AtomArray, chain_length: int | None, if_cyc: bool) -> tuple[AtomArray, str]:
+def build_from_chain_sequence(
+    ref_atom_array: AtomArray,
+    chain_type: str,
+    chain_sequence: str,
+    chain_length: int | None,
+) -> AtomArray:
     
     if chain_length is not None:
         segments = sample_length(chain_sequence, chain_length)
@@ -157,6 +165,69 @@ def build_chain_atom_array(chain_sequence: str, chain_type: str, ref_atom_array:
                 else:
                     backbone_arr.res_id[:] = len(chain_atom_array) - idx + 1
                 chain_atom_array += backbone_arr
+    
+    return chain_atom_array
+
+def build_from_smiles(
+    ref_atom_array: AtomArray,
+    smiles: str,
+) -> AtomArray:
+    chain_atom_array = empty_like_atomarray(ref_atom_array)
+
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        mol = Chem.AddHs(mol)
+        conformer_id = AllChem.EmbedMolecule(mol, AllChem.ETKDG())
+        AllChem.UFFOptimizeMolecule(mol)     
+        for i, atom in enumerate(mol.GetAtoms(), start=1):
+            pdb_info = Chem.AtomPDBResidueInfo(
+                "",         # atom name
+                i,          # serial number
+                "",         # altLoc
+                "-UL",      # residue name
+                1,          # residue number
+                "",         # chain id
+                "",         # insertion code
+                1.0,        # occupancy
+                0.0,        # temp factor
+                True        # hetero atom
+            )
+            atom.SetMonomerInfo(pdb_info)
+        atom_array = from_mol(mol, conformer_id)
+        atom_array = Filter.remove_hydrogens(atom_array)
+        atom_array.atom_name = create_atom_names(atom_array)
+        atom_array.set_annotation('condition_token_mask', np.ones(len(atom_array), dtype=np.bool_))
+        atom_array.set_annotation('is_hotspot_residue', np.ones(len(atom_array), dtype=np.bool_))
+
+        chain_atom_array += atom_array
+        return chain_atom_array        
+    except:
+        raise ValueError(f"Cannot build molecule from smiles: {smiles}. Please check the validity of the smiles string")
+
+def build_chain_atom_array(
+    ref_atom_array: AtomArray,
+    chain_type: str,
+    chain_sequence: str,
+    chain_length: int | None,
+    smiles: str | None,
+    if_cyc: bool,
+) -> tuple[AtomArray, str]:
+    
+    if chain_sequence is not None:
+        chain_atom_array = build_from_chain_sequence(
+            ref_atom_array,
+            chain_type,
+            chain_sequence,
+            chain_length,
+        )
+    elif smiles is not None:
+        chain_atom_array = build_from_smiles(
+            ref_atom_array,
+            smiles,
+        )
+    else:
+        raise NotImplementedError
+
     # reindex residue index
     r_starts = struc.get_residue_starts(chain_atom_array, add_exclusive_stop=True)
     for r_id, (r_s, r_e) in enumerate(zip(r_starts[:-1], r_starts[1:])):
@@ -223,7 +294,7 @@ class SampleDictToFeatures:
         Returns:
             AtomArray: Biotite Atom array.
         """
-        ref_file = self.single_sample_dict['ref_file']
+        ref_file = self.single_sample_dict.get('ref_file', '')
         if ref_file.endswith('.cif'):
             cif_file = pdbx.CIFFile.read(ref_file)
             ref_atom_array = pdbx.get_structure(
@@ -295,10 +366,21 @@ class SampleDictToFeatures:
         entity_identity = defaultdict(dict)
         entity_id = 1
         for c_id, ch in enumerate(self.single_sample_dict['chains']):
-            chain_type, sequence = ch['chain_type'], ch['sequence']
+            chain_type = ch['chain_type']
+            chain_sequence = ch.get('sequence', None)
+            chain_length = ch.get('length', None)
+            smiles = ch.get('smiles', None)
             if_cyc = ch.get('if_cyc', False)
-            l = ch.get('length', None)
-            chain_atom_array, chain_sequence = build_chain_atom_array(sequence, chain_type, ref_atom_array, l, if_cyc)
+            if not chain_sequence:
+                assert smiles is not None, "No sequence or smiles provided for ligand"
+            chain_atom_array, chain_sequence = build_chain_atom_array(
+                ref_atom_array=ref_atom_array,
+                chain_type=chain_type,
+                chain_sequence=chain_sequence,
+                chain_length=chain_length,
+                smiles=smiles,
+                if_cyc=if_cyc,
+            )
             asym_id_str = int_to_letters(c_id + 1)
             chain_id = [asym_id_str] * len(chain_atom_array)
             chain_atom_array.set_annotation("label_asym_id", chain_id)

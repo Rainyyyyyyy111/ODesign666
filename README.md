@@ -21,6 +21,7 @@
     - [Protein Generation](#protein-generation)
     - [Ligand Generation](#ligand-generation)
     - [Nucleic Acid Generation](#nucleic-acid-generation)
+    - [Cyclic Peptide Generation](#cyclic-peptide-generation)
     - [Partial Diffusion](#partial-diffusion)
 - [Training](#training)
 - [Cite](#cite)
@@ -113,6 +114,12 @@ bash ./ckpt/get_odesign_ckpt.sh [ckpt_root_dir]
 
 ## Input Format
 Please refer to **Section B.1 & B.2** in our [Supplementary Information](https://odesign1.github.io/static/pdfs/technical_report.pdf) for details about the input JSON format. Example input JSON files for each task can be found in the [examples](https://github.com/The-Institute-for-AI-Molecular-Design/ODesign/tree/main/examples) directory.
+
+Please note that `ligand` chain can also be specified by SMILES string in the `smiles` field. In this case, you don't need to provide the path to `ref_file`. An example input JSON file is provided [here](https://github.com/The-Institute-for-AI-Molecular-Design/ODesign/tree/main/examples/protein_design/lig_binding_prot_smiles/odesign_input.json). To enable this function, please update the running environment using the following command:
+
+```bash
+conda install -c conda-forge biotite=1.2.0
+```
 
 ## Run Inference
 **Step 1 — Download Required Inference Data**
