@@ -1,0 +1,18 @@
+[
+    {
+    "name": "ptr",
+    "ref_file": "./examples/ptr_design/1SPS.pdb",
+    "chains": [
+    {
+        "chain_type": "proteinChain",
+        "sequence": "F/-2-4"
+    },
+    {
+        "chain_type": "proteinChain",
+        "sequence": "100-110"
+    }
+    ],
+    "hotspot": "F/0",
+    "center_method": "hotspot_center"
+  }
+]
