@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     # -------------------------------------------------------
-    # 🌟 新增步骤：清理磁盘空间（解决 No space left on device）
-    # 这会删除 Android, DotNet 等预装软件，腾出约 30GB 空间
+    # 🌟 修正点：插件名称去掉了 "-action"
+    # 这会腾出约 30GB 空间，解决 No space left on device
     # -------------------------------------------------------
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space-action@v1.3.1
+      uses: jlumbroso/free-disk-space@v1.3.1
       with:
         tool-cache: false
         android: true
@@ -35,7 +35,7 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64
         tags: odesign:latest
-        load: true  # 必须加载到本地 Docker daemon，否则下面找不到
+        load: true
 
     # 2. 安装 Apptainer
     - name: Setup Apptainer
@@ -44,7 +44,6 @@ jobs:
         apptainer-version: '1.3.4'
 
     # 3. 转换为 SIF
-    # 注意：如果你的镜像极其巨大，这一步依然可能慢，但空间应该够了
     - name: Build SIF
       run: |
         apptainer build odesign.sif docker-daemon://odesign:latest
