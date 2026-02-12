@@ -5,7 +5,7 @@ on:
   push:
     branches: [ "main", "master" ]
     paths:
-      - 'Dockerfile' # 只有当 Dockerfile 变动时才自动触发，节省资源
+      - 'Dockerfile666' # 只有当 Dockerfile 变动时才自动触发，节省资源
   workflow_dispatch: # 允许你在 GitHub 网页上手动点击按钮触发
 
 env:
